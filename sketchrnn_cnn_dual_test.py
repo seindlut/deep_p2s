@@ -1,17 +1,4 @@
-# Copyright 2017 Google Inc. All Rights Reserved.
-#
-# Licensed under the Apache License, Version 2.0 (the "License");
-# you may not use this file except in compliance with the License.
-# You may obtain a copy of the License at
-#
-#    http://www.apache.org/licenses/LICENSE-2.0
-#
-# Unless required by applicable law or agreed to in writing, software
-# distributed under the License is distributed on an "AS IS" BASIS,
-# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-# See the License for the specific language governing permissions and
-# limitations under the License.
-"""SketchRNN training."""
+"""Model training."""
 
 from __future__ import absolute_import
 from __future__ import division
@@ -37,13 +24,9 @@ import model as sketch_rnn_model
 import utils
 import data_work
 
-log_root = '/import/vision-datasets001/Jifei/sketchrnn/sketchrnn-ic-sbir/runs'
-# log_root = '/mnt/data/Jifei/sketchrnn/runs/'
-
 FLAGS = tf.app.flags.FLAGS
 
-# tf.app.flags.DEFINE_string('root_dir', './data', 'The root directory for the data')
-tf.app.flags.DEFINE_string('root_dir', '/import/vision-datasets001/Jifei', 'The root directory for the data')
+tf.app.flags.DEFINE_string('root_dir', './data', 'The root directory for the data')
 # tf.app.flags.DEFINE_string('data_dir', data_dir, 'The directory to find the dataset')
 # tf.app.flags.DEFINE_string('dataset', 'quickdraw', 'The dataset for classification')
 # tf.app.flags.DEFINE_string('dataset', 'shoes', 'The dataset for classification')
@@ -52,7 +35,7 @@ tf.app.flags.DEFINE_string('dataset', 'shoesv2', 'The dataset for classification
 tf.app.flags.DEFINE_boolean('simplify_flag', True, 'use simplified dataset')
 tf.app.flags.DEFINE_boolean('use_vae', True, 'use vae or ae only')
 tf.app.flags.DEFINE_boolean('concat_z', True, 'concatenate z with x')
-tf.app.flags.DEFINE_string('log_root', log_root, 'Directory to store model checkpoints, tensorboard.')
+tf.app.flags.DEFINE_string('log_root', './models/runs', 'Directory to store model checkpoints, tensorboard.')
 tf.app.flags.DEFINE_float('lr', 0.0001, "Learning rate.")
 tf.app.flags.DEFINE_float('decay_rate', 0.9999, "Learning rate decay for certain minibatches.")
 tf.app.flags.DEFINE_boolean('lr_decay', False, "Learning rate decay.")
@@ -130,6 +113,7 @@ tf.app.flags.DEFINE_integer('dec_rnn_size', 512, 'Size of RNN when used as decod
 tf.app.flags.DEFINE_integer('z_size', 128, 'Size of latent vector z')
 tf.app.flags.DEFINE_integer('num_mixture', 20, 'Size of latent vector z')
 
+
 def reset_graph():
     """Closes the current default session and resets the graph."""
     sess = tf.get_default_session()
@@ -202,7 +186,6 @@ def save_model(sess, model_save_path, global_step):
 
 
 def sample_test(sess, sample_model, gen_model, test_set, max_seq_len):
-    """Train a sketch-rnn model."""
 
     # set image dir
     # FLAGS.img_dir = FLAGS.log_root.split('runs')[0] + 'sv_imgs/%s/' % FLAGS.dataset
@@ -214,10 +197,9 @@ def sample_test(sess, sample_model, gen_model, test_set, max_seq_len):
 
 
 def tester(model_params):
-    """Train a sketch-rnn model."""
+    """Test model."""
     np.set_printoptions(precision=8, edgeitems=6, linewidth=200, suppress=True)
 
-    print('sketch-rnn')
     print('Hyperparams:')
     for key, val in model_params.values().iteritems():
         print('%s = %s' % (key, str(val)))
