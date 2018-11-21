@@ -12,3 +12,45 @@ In this paper, we present a novel approach for translating an object photo to a 
 
 <img src="images/highlight.png" height="100px" width="400px">
 <!-- ![Example Images](images/highlight.png){:height="70px" width="40px"}-->
+
+*Examples of our model mimicks to sketch stroke by stroke.*
+
+# Model Structure
+
+We aim to learn a mapping function between the photo domain *X* and sketch domain *Y*, where we denote the  empirical data distribution as *x ~ p<sub>data</sub>(x)* and *y ~ p<sub>data</sub>(y)* and represent each vector sketch segment as (*s<sub>xi</sub>*, *s<sub>yi</sub>*), a two-dimensional offset vector. Our model includes four mapping functions, learned using four subnets namely a photo encoder, a sketch encoder, a photo decoder, a sketch decoder. The illustration of our model architecture is as shown as below. 
+
+<img src="images/architecture.png" height="100px" width="400px">
+
+# Training a Model
+
+To train the model you first need a dataset containing train/validation/test examples. We have provided links to the `aaron_sheep` dataset and the model will use this lightweight dataset by default.
+
+Example Usage:
+--------------
+
+```bash
+python sketchrnn_cnn_dual_train.py --dataset shoesv2"
+```
+
+As mentioned in the paper, before you train a photo-to-sketch (p2s) synthesis model, you need pretrain your model on the [QuickDraw](https://github.com/googlecreativelab/quickdraw-dataset) Data from the corresponding categories.
+
+We have tested this model on TensorFlow 1.4 for Python 2.7.
+
+# Datasets
+
+The datasets for our photo-to-sketch synthesis task are *ShoeV2* and *ChairV2* datasets, which can be dowloaded from the homepage of our group [SketchX](http://sketchx.eecs.qmul.ac.uk/downloads/).
+
+The pretraining dataset can be download from [QuickDraw](https://github.com/googlecreativelab/quickdraw-dataset) 
+
+# Citation
+
+If you find this project useful for academic purposes, please cite it as:
+
+```
+@Inproceedings{song2018learning,
+  title             = {Learning to Sketch with Shortcut Cycle Consistency},
+  author            = {Song, Jifei and Pang, Kaiyue and Song, Yi-Zhe and Xiang, Tao and Hospedales, Timothy M},
+  booktitle         = {CVPR},
+  year              = {2018}
+}
+```
