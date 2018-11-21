@@ -70,8 +70,7 @@ tf.app.flags.DEFINE_boolean('flip_aug', False, 'Whether to flip the sketch and p
 tf.app.flags.DEFINE_boolean('dist_aug', False, 'Whether to distort the images')
 tf.app.flags.DEFINE_boolean('hp_filter', False, 'Whether to add high pass filter')
 
-tf.app.flags.DEFINE_integer('k_dis', 5, 'train k_dis dis_op for 1 gen steps')
-tf.app.flags.DEFINE_integer('k_gen', 3, 'train 1 dis_op among k_gen gen steps')
+# print flags
 tf.app.flags.DEFINE_integer("max_steps", 100000, "Max training steps")
 tf.app.flags.DEFINE_integer("print_every", 100, "print training loss after this many steps (default: 20)")
 tf.app.flags.DEFINE_integer("save_every", 1000, "Evaluate model on dev set after this many steps (default: 100)")

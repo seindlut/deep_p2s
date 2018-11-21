@@ -10,7 +10,11 @@ This repo contains the TensorFlow code for `sketch-rnn`, the recurrent neural ne
 
 In this paper, we present a novel approach for translating an object photo to a sketch, mimicking the human sketching process. Teaching a machine to generate a sketch from a photo just like humans do is not easy. This requires not only developing an abstract concept of a visual object instance, but also knowing what, where and when to sketch the next line stroke. Figure \ref{fig:highlight} shows  that the developed photo-to-sketch synthesizer takes a photo as input and mimics the human sketching process by sequentially drawing one stroke at a time. The resulting synthesized sketches provide an abstract and semantically meaningful depiction of the given object, just like human sketches do. 
 
+<<<<<<< HEAD
 <img src="images/highlight.png" width="80%" style="display: block; margin: 0 auto;">
+=======
+<img src="images/highlight.png" width="100%">
+>>>>>>> f3657d91d8b0c3464f9fcd2503babe6989c8bd84
 <!-- <img src="images/highlight.png" height="100px" width="400px">-->
 <!-- ![Example Images](images/highlight.png){:height="70px" width="40px"}-->
 
