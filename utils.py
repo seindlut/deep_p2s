@@ -25,7 +25,6 @@ import numpy as np
 import scipy.io as sio
 import tensorflow as tf
 from cairosvg import svg2png
-from print_log import print_log
 import model as sketch_rnn_model
 from data_work import load_data_and_pair
 
@@ -51,9 +50,72 @@ def reassemble_data(concated_data, offsets):
 
 
 def config_and_print_log(log_dir, FLAGS):
-    log_prefix = 'logs/' + FLAGS.dataset.lower() + '_dual_' + '%s_' % FLAGS.basenet
+    log_prefix = FLAGS.dataset.lower() + '_dual_' + '%s_' % FLAGS.basenet
+    if not os.path.exists(log_dir):
+        os.mkdir(log_dir)
     log_prefix = os.path.join(log_dir, log_prefix)
     print_log(log_prefix, FLAGS)
+
+
+def print_log(log_prefix, FLAGS):
+    import sys
+    import datetime
+    try:
+        from tabulate import tabulate
+    except:
+        print("tabulate lib not installed")
+    # log direcory and file
+    net_name = 'Deep-Photo-to-Sketch-Synthesis-Net'
+    log_file = log_prefix + os.uname()[1].split('.')[0] + '_' + datetime.datetime.now().isoformat().split('.')[0].replace('-','_').replace(':', '_') + '_log.txt'
+    f = open(log_file, 'w')
+    sys.stdout = Tee(sys.stdout, f)
+    print("logging to ", log_file, "...")
+
+    # print header
+    print("===============================================")
+    print("Trainning ", net_name, " in this framework")
+    print("===============================================")
+
+    print("Tensorflow flags:")
+
+    flags_list = []
+    for attr, value in sorted(FLAGS.__flags.items()):
+        flags_list.append(attr)
+    FLAGS.saved_flags = " ".join(flags_list)
+
+    flag_table = {}
+    flag_table['FLAG_NAME'] = []
+    flag_table['Value'] = []
+    flag_lists = FLAGS.saved_flags.split()
+    # print self.FLAGS.__flags
+    for attr in flag_lists:
+        if attr not in ['saved_flags', 'net_name', 'log_root']:
+            flag_table['FLAG_NAME'].append(attr.upper())
+            flag_table['Value'].append(getattr(FLAGS, attr))
+    flag_table['FLAG_NAME'].append('NET_NAME')
+    flag_table['Value'].append(net_name)
+    flag_table['FLAG_NAME'].append('HOST_NAME')
+    flag_table['Value'].append(os.uname()[1].split('.')[0])
+    try:
+        print(tabulate(flag_table, headers="keys", tablefmt="fancy_grid").encode('utf-8'))
+    except:
+        for attr in flag_lists:
+            print("attr name, ", attr.upper())
+            print("attr value, ", getattr(FLAGS, attr))
+
+
+class Tee(object):
+    def __init__(self, *files):
+        self.files = files
+
+    def write(self, obj):
+        for f in self.files:
+            f.write(obj)
+            f.flush() # If you want the output to be visible immediately
+
+    def flush(self) :
+        for f in self.files:
+            f.flush()
 
 
 def get_skh_img_ids(image_id, instance_id):
