@@ -42,7 +42,7 @@ We have tested this model on TensorFlow 1.4 for Python 2.7.
 Example:
 --------
 
-<p align="center"> <img src="images/example.png" width="80%"></p>
+<p align="center"> <img src="images/example.png" width="50%"></p>
 
 # Datasets
 
