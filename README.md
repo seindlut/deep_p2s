@@ -29,7 +29,7 @@ To train the model you first need a dataset containing train/validation/test exa
 Usage:
 
 ```bash
-python sketchrnn_cnn_dual_train.py --dataset shoesv2"
+python sketchrnn_cnn_dual_train.py --dataset shoesv2
 ```
 
 As mentioned in the paper, before you train a photo-to-sketch (p2s) synthesis model, you need pretrain your model on the [QuickDraw](https://github.com/googlecreativelab/quickdraw-dataset) Data from the corresponding categories.
