@@ -26,7 +26,6 @@ import scipy.io as sio
 import tensorflow as tf
 from cairosvg import svg2png
 import model as sketch_rnn_model
-from data_work import load_data_and_pair
 
 
 def load_hdf5(fname):

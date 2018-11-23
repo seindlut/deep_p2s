@@ -25,7 +25,6 @@ import random
 import numpy as np
 import tensorflow as tf
 import tensorflow.contrib.slim as slim
-from data_work import get_input_size
 try:
     from magenta.models.sketch_rnn import rnn
 except:
@@ -882,93 +881,17 @@ def get_init_fn(pretrain_model, checkpoint_exclude_scopes):
     return slim.assign_from_checkpoint_fn(pretrain_model, variables_to_restore)
 
 
-def get_init_fn_rm(checkpoint_dir, checkpoint_exclude_scopes, prefix, pretrain_model):
-    """Returns a function run by the chief worker to warm-start the training."""
-    print("load pretrained model from %s and remove header %s" % (pretrain_model, prefix))
-    exclusions = [scope.strip() for scope in checkpoint_exclude_scopes]
-
-    var_list = tf.trainable_variables()
-    # remove the prefix to restore the pretrained inception model
-    variables_to_restore = {var.name.split(prefix)[-1].split(':')[0]:var for var in var_list if prefix in var.name}
-    variables_to_restore = pop_restore_keys(variables_to_restore, exclusions)
-
-    saver = tf.train.Saver(variables_to_restore)
-
-    def callback(session):
-        saver.restore(session, os.path.join(checkpoint_dir, pretrain_model))
-    return callback
-
-
-def get_init_fn_with_sep_models(checkpoint_dir, checkpoint_exclude_scopes, p2s_pretrain_model, s2p_pretrain_model):
-    """Returns a function run by the chief worker to warm-start the training."""
-    print("load sep pretrained model from %s" % p2s_pretrain_model)
-    print("load inv pretrained model from %s" % s2p_pretrain_model)
-    exclusions = [scope.strip() for scope in checkpoint_exclude_scopes]
-
-    var_list = []
-    # for var in slim.get_model_variables():
-    for var in tf.trainable_variables():
-        excluded = False
-        for exclusion in exclusions:
-            if var.op.name.startswith(exclusion):
-                excluded = True
-                break
-        if not excluded:
-            print(var.name)
-            var_list.append(var)
-
-    p2s_var_list, s2p_var_list, other_var_list = [], [], []
-    for var in var_list:
-        if any(sub_str in var.name for sub_str in ['p2s', 's2p', 'p2p', 's2s']):
-            other_var_list.append(var)
-        elif any(sub_str in var.name for sub_str in ['vector_rnn/ENC_RNN', 'vector_rnn/CNN_DEC']):
-            s2p_var_list.append(var)
-        elif any(sub_str in var.name for sub_str in ['vector_rnn/CNN', 'vector_rnn/RNN']):
-            p2s_var_list.append(var)
-        else:
-            other_var_list.append(var)
-
-    p2s_saver = tf.train.Saver(p2s_var_list)
-    s2p_saver = tf.train.Saver(s2p_var_list)
-
-    def callback(session):
-        p2s_saver.restore(session, os.path.join(checkpoint_dir, p2s_pretrain_model))
-        s2p_saver.restore(session, os.path.join(checkpoint_dir, s2p_pretrain_model))
-    return callback
-
-
-def pop_restore_keys(variables_to_restore, exclusions):
-    for key in variables_to_restore.keys():
-        for exclusion in exclusions:
-            if exclusion in key:
-                variables_to_restore.pop(key, None)
-
-    for key in variables_to_restore.keys():
-        print("%s <== %s" % (variables_to_restore[key].name, key))
-
-    return variables_to_restore
-
-
-def init_vars(sess, model_prefix, basenet):
-    # init model
-    pre_trained_model_path = os.path.join(model_prefix.split('runs')[0], 'pretrained_model')
-    if basenet == 'sketchanet':
-        init_model_name = os.path.join(pre_trained_model_path, 'sketchnet_init.npy')
-        # init_model_name = os.path.join(pre_trained_model_path, 'step1.npy')
-        init_ops = init_variables(init_model_name)
-        sess.run(init_ops)
-    elif basenet == 'inceptionv1':
-        init_fn = get_init_fn_rm(pre_trained_model_path, ['linear/', 'RNN', 'Logits'], 'vector_rnn/', 'inception_v1.ckpt')
-        init_fn(sess)
-    elif basenet == 'inceptionv3':
-        init_fn = get_init_fn_rm(pre_trained_model_path, ['linear/', 'RNN', 'Logits'], 'vector_rnn/', 'inception_v3.ckpt')
-        init_fn(sess)
+def get_input_size():
+    if FLAGS.basenet == 'alexnet':
+        crop_size = 227
+        channel_size = 3
+    elif FLAGS.basenet in ['resnet', 'inceptionv3']:
+        crop_size = 299
+        channel_size = 3
+    elif FLAGS.basenet in ['sketchynet', 'inceptionv1', 'resnet', 'vgg', 'mobilenet', 'gen_cnn']:
+        crop_size = 224
+        channel_size = 3
     else:
-        raise Exception('Input file error')
-
-
-def init_dis_vars(sess, model_prefix, model_name, include_scope_str, exclude_scopes, include_scope_str_ref):
-    print("Initialising discriminator variables")
-    model_path = os.path.join(model_prefix.split('runs')[0], 'pretrained_model/%s' % model_name)
-    init_ops = load_npy_model(model_path, include_scope_str, exclude_scopes, include_scope_str_ref)
-    sess.run(init_ops)
+        crop_size = 225
+        channel_size = 1
+    return crop_size, channel_size

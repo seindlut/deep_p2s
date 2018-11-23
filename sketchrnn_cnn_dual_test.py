@@ -4,25 +4,20 @@ from __future__ import absolute_import
 from __future__ import division
 from __future__ import print_function
 
-from cStringIO import StringIO
 import json
 import os
 import sys
 import time
-import urllib
-import zipfile
 
 # internal imports
 
 import cv2
 import numpy as np
-import requests
 import tensorflow as tf
 
-from model import sample, sample_recons, get_init_fn, init_vars
+from model import sample, sample_recons, get_init_fn
 import model as sketch_rnn_model
 import utils
-import data_work
 
 FLAGS = tf.app.flags.FLAGS
 
@@ -85,7 +80,6 @@ tf.app.flags.DEFINE_boolean('hp_filter', False, 'Whether to add high pass filter
 tf.app.flags.DEFINE_integer("print_every", 100, "print training loss after this many steps (default: 20)")
 tf.app.flags.DEFINE_integer("save_every", 1000, "Evaluate model on dev set after this many steps (default: 100)")
 tf.app.flags.DEFINE_boolean('debug_test', False, 'Set to true to load previous checkpoint')
-tf.app.flags.DEFINE_boolean('use_jade', False, 'Locate data and model in the current dir')
 tf.app.flags.DEFINE_string("saved_flags", None, "Save all flags for printing")
 tf.app.flags.DEFINE_string('hparams', '',
                            'Pass in comma-separated key=value pairs such as \'save_every=40,decay_rate=0.99\''

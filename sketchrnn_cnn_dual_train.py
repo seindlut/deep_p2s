@@ -4,23 +4,19 @@ from __future__ import absolute_import
 from __future__ import division
 from __future__ import print_function
 
-from cStringIO import StringIO
 import json
 import os
 import sys
 import time
-import urllib
-import zipfile
 
 # internal imports
 
 import numpy as np
 import tensorflow as tf
 
-from model import sample, get_init_fn, init_vars, init_dis_vars, get_init_fn_with_sep_models
+from model import sample, get_init_fn
 import model as sketch_rnn_model
 import utils
-import data_work
 import cv2
 
 
@@ -118,36 +114,6 @@ def load_model(model_dir):
     return [model_params, eval_model_params, sample_model_params]
 
 
-def evaluate_model(sess, model, data_set):
-    """Returns the average weighted cost, reconstruction cost and KL cost."""
-    batch_size = data_set.batch_size
-    sketch_size, photo_size = data_set.sketch_size, data_set.image_size
-    dmat = np.zeros((photo_size, sketch_size))
-
-    # extract sketch-photo score mat
-    for idx in range(photo_size):
-        sys.stdout.write('\r>> evaluation iter: (%d/%d)' % (idx, photo_size))
-        y = data_set.image_data[np.repeat(idx, batch_size), ::]
-        for idy in range(data_set.num_batches_for_sketch):
-            s, x = data_set.get_sketch_batch(idy)
-            start_idy = idy * batch_size
-            end_idy = min(start_idy + batch_size, sketch_size)
-            feed_dict = {
-                model.input_sketch: x,
-                model.sequence_lengths: s,
-                model.input_pos_photo: y
-                }
-
-            dist_batch = sess.run([model.r_score], feed_dict)[0]
-            dmat[idx, start_idy:end_idy] = dist_batch[:end_idy-start_idy]
-
-    dmat = -np.transpose(dmat)
-
-    acc1, acc10, _ = data_work.score_feat_eval_with_label(dmat, data_set.s_c_label, data_set.s_id_label, data_set.p_id_label)
-
-    return acc1, acc10
-
-
 def sampling_model(sess, model, gen_model, data_set, step, seq_len, subset_str=''):
     """Returns the average weighted cost, reconstruction cost and KL cost."""
     sketch_size, photo_size = data_set.sketch_size, data_set.image_size
@@ -191,9 +157,6 @@ def load_pretrain(sess, vae_type, enc_type, dataset, basenet, log_root):
             init_fn(sess)
         else:
             print('Warning: pretrained model not found at %s' % pretrain_dir)
-    else:
-        if enc_type == 'cnn':
-            init_vars(sess, FLAGS.log_root, basenet)
 
 
 def resume_train(sess, load_dir, dataset, enc_type, basenet, feat_type, log_root):
