@@ -133,10 +133,9 @@ def load_dataset(root_dir, dataset, model_params, inference_mode=False):
     # applies same scaling factor to valid and test set.
 
     if dataset in ['shoesv2', 'chairsv2', 'shoesv2f_sup', 'shoesv2f_train']:
-        data_dir = '%s/sbir/sch_com_v2/%s/' % (root_dir, dataset.split('v')[0])
+        data_dir = '%s/%s/' % (root_dir, dataset.split('v')[0])
     elif 'quickdraw' in str(dataset).lower():
-        category = str(dataset).lower().split('quickdraw_')[-1]
-        data_dir = os.path.join(root_dir, 'QuickDraw/all')
+        data_dir = os.path.join(root_dir, 'quickdraw')
     else:
         raise Exception('Dataset error')
 
