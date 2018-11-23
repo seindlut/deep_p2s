@@ -45,7 +45,7 @@ The datasets for our photo-to-sketch synthesis task are *ShoeV2* and *ChairV2* d
 
 The pretraining dataset can be download from [QuickDraw](https://github.com/googlecreativelab/quickdraw-dataset).
  
-The original data can be converted to hdf5 format using *prepare_data.py*. Or you can downloaded from the [GoogleDrive](https://drive.google.com/open?id=1029l8QZ9EWzQEb9GDylVM3EP4_kurW1E). 
+The original data can be converted to hdf5 format using *prepare_data.py*. Or you can download it from the [GoogleDrive](https://drive.google.com/open?id=1029l8QZ9EWzQEb9GDylVM3EP4_kurW1E). 
 
 # Citation
 
