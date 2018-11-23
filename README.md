@@ -27,7 +27,6 @@ We aim to learn a mapping function between the photo domain *X* and sketch domai
 To train the model you first need a dataset containing train/validation/test examples. We have provided links to the `aaron_sheep` dataset and the model will use this lightweight dataset by default.
 
 Usage:
---------------
 
 ```bash
 python sketchrnn_cnn_dual_train.py --dataset shoesv2"
@@ -40,7 +39,6 @@ We have tested this model on TensorFlow 1.4 for Python 2.7.
 # Result
 
 Example:
---------
 
 <p align="center"> <img src="images/example.png" width="50%"></p>
 
