@@ -1,10 +1,7 @@
 # Deep Photo-to-Sketch Synthesis Model
 
-Before jumping in our code implementation based on [Tensorflow](https://github.com/tensorflow/tensorflow)., please refer to our paper [Learning to Sketch with Shortcut Cycle Consistency](https://arxiv.org/abs/1805.00247) for the basic idea.
+Before jumping in our code implementation based on [Tensorflow](https://github.com/tensorflow/tensorflow), please refer to our paper [Learning to Sketch with Shortcut Cycle Consistency](https://arxiv.org/abs/1805.00247) for the basic idea.
 
-
-
-This repo contains the TensorFlow code for `sketch-rnn`, the recurrent neural network model described in [Teaching Machines to Draw](https://research.googleblog.com/2017/04/teaching-machines-to-draw.html) and [A Neural Representation of Sketch Drawings](https://arxiv.org/abs/1704.03477).
 
 # Overview
 
@@ -14,7 +11,7 @@ In this paper, we present a novel approach for translating an object photo to a 
 <!-- <img src="images/highlight.png" height="100px" width="400px">-->
 <!-- ![Example Images](images/highlight.png){:height="70px" width="40px"}-->
 
-*Examples of our model mimicks to sketch stroke by stroke.*
+*Examples of our model mimicking to sketch stroke by stroke.*
 
 # Model Structure
 
@@ -24,7 +21,7 @@ We aim to learn a mapping function between the photo domain *X* and sketch domai
 
 # Training a Model
 
-To train the model you first need a dataset containing train/validation/test examples. We have provided links to the `aaron_sheep` dataset and the model will use this lightweight dataset by default.
+Our deep photo-to-sketch (p2s) synthesis model is trained on the dataset of ShoeV2 and ChairV2.
 
 Usage:
 
